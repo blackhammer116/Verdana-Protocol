@@ -149,7 +149,7 @@ Verdana leverages **Cardano blockchain**, **satellite data**, **AI coordination*
 
 - Nebiyu Samuel
 - Hauwa Mohammad Bell
-- Armel .
+- Armel Munyaneza.
 
 ---
 
