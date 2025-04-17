@@ -148,7 +148,7 @@ Verdana leverages **Cardano blockchain**, **satellite data**, **AI coordination*
 ## 🤝 Contributors
 
 - Nebiyu Samuel
-- Hauwa Mohammad Bell
+- Hauwa Muhammad Bello
 - Armel Munyaneza.
 
 ---
