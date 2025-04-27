@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
             <Link href="/" className="flex items-center space-x-2">
               <TreePine className="w-8 h-8 text-primary" />
               <span className="text-xl font-bold text-primary">
-                Vardana Protocal
+              Verdana Protocal
               </span>
             </Link>
           </div>
