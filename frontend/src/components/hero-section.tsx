@@ -19,7 +19,7 @@ export default function HeroSection() {
           Get Paid for Planting Trees On-chain
         </h1>
         <p className="text-xl md:text-2xl mb-8 max-w-2xl">
-          Vardano Protocol uses blockchain technology to reward farmers for capturing CO₂ through tree planting.
+        verdana Protocol uses blockchain technology to reward farmers for capturing CO₂ through tree planting.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button 
