@@ -1,4 +1,4 @@
- ## this is vardano frontend
+ ## this is vverdana frontend
 
  to get started clone this repo 
  cd frontend

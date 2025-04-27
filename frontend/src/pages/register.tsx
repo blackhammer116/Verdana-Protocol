@@ -79,7 +79,7 @@ export default function Register() {
         <div className="flex justify-center items-center mb-8">
           <div className="flex items-center gap-2">
             <Tree className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">Vardano Protocol</h1>
+            <h1 className="text-3xl font-bold">verdana Protocol</h1>
           </div>
         </div>
         

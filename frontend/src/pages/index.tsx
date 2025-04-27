@@ -297,7 +297,7 @@ export default function Home() {
             Ready to Make a Difference?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join Vardano Protocol today and be part of the solution to climate
+            Join verdana Protocol today and be part of the solution to climate
             change while earning rewards for your environmental efforts.
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">

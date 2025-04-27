@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2">
               <TreePine className="w-8 h-8 text-white" />
-              <span className="text-xl font-bold">Vardano</span>
+              <span className="text-xl font-bold">verdana</span>
             </Link>
             <p className="mt-4 text-sm text-gray-300">
               Payment for Ecosystem Services platform built on Cardano. Get rewarded for planting trees.
@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-10 pt-6 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} Vardano Protocol. All rights reserved.
+            © {new Date().getFullYear()} verdana Protocol. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
             <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
