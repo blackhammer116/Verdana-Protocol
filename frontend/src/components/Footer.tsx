@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2">
               <TreePine className="w-8 h-8 text-white" />
-              <span className="text-xl font-bold">verdana</span>
+              <span className="text-xl font-bold">Verdana</span>
             </Link>
             <p className="mt-4 text-sm text-gray-300">
               Payment for Ecosystem Services platform built on Cardano. Get rewarded for planting trees.
