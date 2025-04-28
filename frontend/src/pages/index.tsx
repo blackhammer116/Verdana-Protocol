@@ -143,24 +143,24 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <div className="text-4xl font-bold text-primary mb-2">
-                10,000+
+                105
               </div>
               <div className="text-gray-600">Trees Planted</div>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <div className="text-4xl font-bold text-primary mb-2">250+</div>
+              <div className="text-4xl font-bold text-primary mb-2">3</div>
               <div className="text-gray-600">Farmers Registered</div>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <div className="text-4xl font-bold text-primary mb-2">500+</div>
+              <div className="text-4xl font-bold text-primary mb-2">13.1+</div>
               <div className="text-gray-600">Tons of CO₂ Absorbed</div>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm">
               <div className="text-4xl font-bold text-primary mb-2">
-                $30,000+
+                $300+
               </div>
               <div className="text-gray-600">Paid to Farmers</div>
             </div>
