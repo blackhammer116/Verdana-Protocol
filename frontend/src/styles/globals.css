@@ -18,6 +18,79 @@
   --text-light: #FFFFFF;
 
 }
+/* styles/globals.css */
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif; /* Change to your preferred font */
+  background-color: #f9f9f9; /* Light background color */
+  color: #333; /* Dark text color */
+  line-height: 1.6; /* Improve readability */
+}
+
+.container {
+  max-width: 1200px; /* Limit the width of the container */
+  margin: 0 auto; /* Center the container */
+  padding: 1rem; /* Add padding */
+}
+
+.flex {
+  display: flex; /* Flexbox layout */
+}
+
+.grid {
+  display: grid; /* Grid layout */
+}
+
+.gap-4 {
+  gap: 1rem; /* Space between grid items */
+}
+
+.text-center {
+  text-align: center; /* Center text */
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Rounded corners */
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2 rounded-lg font-medium bg-[#2E7D32] text-white hover:bg-[#1B5E20] transition-colors duration-300;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-2 rounded-lg font-medium border border-[#2E7D32] text-[#2E7D32] hover:bg-[#E8F5E9] transition-colors duration-300;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#81C784] focus:border-transparent;
+  }
+  
+  .form-label {
+    @apply block mb-2 text-sm font-medium text-gray-700;
+  }
+}
+
+.leaflet-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 0.75rem;
+}
+/* Add more styles as needed */
 
 @media (prefers-color-scheme: dark) {
   :root {

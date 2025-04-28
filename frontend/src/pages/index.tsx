@@ -29,12 +29,17 @@ import {
 } from "@/lib/mock-data";
 import WalletConnect from "@/components/wallet-connect";
 import Link from "next/link";
+import { useWallet } from "@meshsdk/react";
+import { cn } from "@/lib/utils";
+import router from "next/router";
 
 export default function Home() {
   const [totalTrees, setTotalTrees] = useState(0);
   const [totalCO2, setTotalCO2] = useState(0);
   const [totalFarmers, setTotalFarmers] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
+  const { connected } = useWallet(); 
+
+
 
   useEffect(() => {
     // Calculate total trees and CO2 from mock data
@@ -106,20 +111,23 @@ export default function Home() {
         </div>
 
         <div className="mt-12 text-center">
-          <Button 
-            size="lg" 
-            className="text-lg px-8"
-            onClick={() => window.location.href = isConnected ? '/dashboard' : '#'}
-            disabled={!isConnected}
-          >
-            {isConnected ? 'Go to Dashboard' : 'Connect Wallet to Start'}
-          </Button>
-          {!isConnected && (
-            <p className="mt-2 text-sm text-muted-foreground">
-              Connect your Cardano wallet to access the dashboard.
-            </p>
+        <Link
+          href="/dashboard"
+          className={cn(
+            "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+            "h-10 py-2 px-4 text-lg ",
+            !connected && "pointer-events-none opacity-50"
           )}
-        </div>
+        >
+          {connected ? 'Go to Dashboard' : 'Connect Wallet to Start'}
+        </Link>
+        {!connected && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            Connect your Cardano wallet to access the dashboard.
+          </p>
+        )}
+      </div>
       </section>
 
       <section className="py-16 bg-gray-50 rounded-3xl">
@@ -297,7 +305,7 @@ export default function Home() {
             Ready to Make a Difference?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join Vardano Protocol today and be part of the solution to climate
+            Join Verdana Protocol today and be part of the solution to climate
             change while earning rewards for your environmental efforts.
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">

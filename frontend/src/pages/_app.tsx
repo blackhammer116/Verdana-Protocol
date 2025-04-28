@@ -7,6 +7,7 @@ import { MeshProvider } from "@meshsdk/react";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import "leaflet/dist/leaflet.css";
 
 const inter = Inter({ subsets: ["latin"] });
 

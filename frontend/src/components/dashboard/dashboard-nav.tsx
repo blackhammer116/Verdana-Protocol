@@ -12,7 +12,7 @@ export default function DashboardNav() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <Tree className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">verdana Protocol</span>
+            <span className="text-xl font-bold">Verdana Protocol</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">

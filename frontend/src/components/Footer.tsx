@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-10 pt-6 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} verdana Protocol. All rights reserved.
+            © {new Date().getFullYear()} Verdana Protocol. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
             <a href="#" className="text-sm text-gray-400 hover:text-white transition-colors">Privacy Policy</a>

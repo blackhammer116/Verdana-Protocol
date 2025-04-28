@@ -17,16 +17,26 @@ export default function Dashboard() {
   const address = useAddress();
   const [activeFarmer, setActiveFarmer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const storedFarmer = localStorage.getItem('registeredFarmer');
   useEffect(() => {
-    // Check if wallet is connected
-    if (!address) {
-      router.push('/');
-      return;
-    }
 
-    // Find the farmer based on the connected wallet
-    const farmer = mockFarmers.find(f => f.walletAddress === address);
+    // if (!address) {
+    //   router.push('/');
+    //   return;
+    // }
+    console.log("Connected wallet address:", address);
+
+    if (storedFarmer) {
+      const farmer = JSON.parse(storedFarmer);
+      if (farmer.walletAddress === address) {
+        setActiveFarmer(farmer.id);
+        setLoading(false);
+        return;
+      }
+    }
+console.log("activeFarmer", activeFarmer);
+    // Find the farmer based on the connected wallet use local storage
+    const farmer = storedFarmer ? JSON.parse(storedFarmer) : null;
     if (farmer) {
       setActiveFarmer(farmer.id);
     } else {
