@@ -1,24 +1,26 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+"use client";
 
-// Fix for Leaflet marker icon
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-let DefaultIcon = L.icon({
-  iconUrl: icon.src,
-  shadowUrl: iconShadow.src,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+const MapComponentImpl = ({ projects, center, zoom, scrollWheelZoom = true, onProjectSelect }) => {
+  useEffect(() => {
+    // Fix the Leaflet icon issue (this is critical for the markers to display)
+    delete L.Icon.Default.prototype._getIconUrl;
+    
+    L.Icon.Default.mergeOptions({
+      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+  }, []);
 
-L.Marker.prototype.options.icon = DefaultIcon;
-
-const MapComponent = ({ projects, center, zoom, scrollWheelZoom = true, onProjectSelect }) => {
   return (
     <MapContainer
       center={center}
@@ -63,4 +65,4 @@ const MapComponent = ({ projects, center, zoom, scrollWheelZoom = true, onProjec
   );
 };
 
-export default MapComponent;
+export default MapComponentImpl;

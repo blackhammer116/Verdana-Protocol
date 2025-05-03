@@ -67,7 +67,7 @@ const dummyProjects = [
     description:
       "Reforestation of degraded highlands in Ethiopia, providing sustainable livelihoods for local communities.",
     image:
-      "https://images.pexels.com/photos/3694147/pexels-photo-3694147.jpeg?auto=compress&cs=tinysrgb&w=1260",
+      "https://images.pexels.com/photos/3794147/pexels-photo-3794147.jpeg?auto=compress&cs=tinysrgb&w=1260",
   },
   {
     id: 4,
@@ -243,14 +243,14 @@ const ProjectsPage = () => {
       {/* Map View */}
       {viewMode === "map" && (
         <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-          <div className="h-96">
+          {/* <div className="h-96">
             <MapWithNoSSR 
               projects={filteredProjects} 
               center={[8, 10]} 
               zoom={3} 
               onProjectSelect={handleOpenProject} 
             />
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -516,7 +516,7 @@ const ProjectsPage = () => {
               </div>
 
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold mb-4">Project Location</h3>
+                {/* <h3 className="text-lg font-semibold mb-4">Project Location</h3>
                 <div className="h-64 rounded-lg overflow-hidden">
                   <MapWithNoSSR 
                     projects={[selectedProject]} 
@@ -524,7 +524,7 @@ const ProjectsPage = () => {
                     zoom={10} 
                     scrollWheelZoom={false} 
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="mt-6 flex flex-col sm:flex-row gap-4">

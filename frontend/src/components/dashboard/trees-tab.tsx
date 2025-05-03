@@ -20,15 +20,15 @@ interface TreesTabProps {
   farmerId: string;
 }
 
-// Import map component dynamically to avoid SSR issues with Leaflet
-const TreeMap = dynamic(() => import("@/components/dashboard/tree-map"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[400px] bg-muted flex items-center justify-center">
-      Loading map...
-    </div>
-  ),
-});
+// // Import map component dynamically to avoid SSR issues with Leaflet
+// const TreeMap = dynamic(() => import("@/components/dashboard/tree-map"), {
+//   ssr: false,
+//   loading: () => (
+//     <div className="w-full h-[400px] bg-muted flex items-center justify-center">
+//       Loading map...
+//     </div>
+//   ),
+// });
 
 export default function TreesTab({ farmerId }: TreesTabProps) {
   const [trees, setTrees] = useState<TreeType[]>([]);
@@ -181,7 +181,7 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
           <CardTitle>Tree Locations</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <TreeMap trees={trees} height={400} />
+          {/* <TreeMap trees={trees} height={400} /> */}
         </CardContent>
       </Card>
 
