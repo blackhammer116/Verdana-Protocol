@@ -1,0 +1,16 @@
+research_task:
+  description: >
+    Continuously monitor the Normalized Difference Vegetation Index (NDVI) data for the registered project areas. Identify any significant increases or decreases in NDVI over time and report any notable anomalies.
+    the current year is {current_year}.
+  expected_output: >
+    A report detailing the trends in NDVI across different project areas, highlighting any unusual changes and potential reasons for these changes.
+  agent: researcher
+
+reporting_task:
+  description: >
+    Develop a clear and concise guide for new farmers joining the Vardano Protocol. This guide should explain the registration process, how tree growth is monitored, how carbon tokens are earned, and how they can utilize their tokens.
+
+  expected_output: >
+    A user-friendly document (in markdown format without '```') that walks farmers through the entire process of participating in the Vardano Protocol.
+
+  agent: reporting_analyst

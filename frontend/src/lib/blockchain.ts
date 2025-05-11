@@ -8,8 +8,7 @@ const SCRIPT_ADDRESS = "addr_test1wpnlxv2xv9a9ucvnvzqakwepzl9ltx7jzgm53av2e9ncv4
 export async function plantTree(
   wallet: AppWallet,
   datum: Datum,
-  treeData: {
-    treeType: string;
+  treeData: {    treeType: string;
     latitude: number;
     longitude: number;
   }

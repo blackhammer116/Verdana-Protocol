@@ -1,119 +1,157 @@
-use aiken/dict
-use aiken/hash
-use aiken/list
-use aiken/transaction.{ScriptContext, Transaction}
-use aiken/transaction/credential.{Address, Credential, VerificationKey}
-use aiken/transaction/value
+
+use aiken/collection/list
+use cardano/transaction.{Transaction,  Input, Output, OutputReference}
+use cardano/address.{Address,  VerificationKey}
+use cardano/assets.{   from_asset,quantity_of}
 
 // Data types for our contract
 
 // Represents a tree planting record
-type TreePlantingRecord {
-  farmer_id: ByteArray,
-  location: Location,
-  tree_type: ByteArray,
-  planted_timestamp: Int,
-  tree_count: Int,
+pub type TreePlantingRecord {
+    farmer_id: ByteArray,
+    location: Location,
+    tree_type: ByteArray,
+    planted_timestamp: Int,
+    tree_count: Int,
 }
 
 // Location coordinates
-type Location {
-  latitude: Int,  // Scaled by 1,000,000 for precision
-  longitude: Int, // Scaled by 1,000,000 for precision
+pub type Location {
+    latitude: Int,  // Scaled by 1,000,000 for precision
+    longitude: Int, // Scaled by 1,000,000 for precision
 }
 
 // Carbon measurement data from satellite/monitoring
-type CarbonData {
-  farmer_id: ByteArray,
-  ndvi: Int,        // Scaled by 1,000 for precision (0.123 -> 123)
-  co2_absorbed: Int, // In kg, scaled by 100 (1.5kg -> 150)
-  timestamp: Int,
+pub type CarbonData {
+    farmer_id: ByteArray,
+    ndvi: Int,        // Scaled by 1,000 for precision (0.123 -> 123)
+    co2_absorbed: Int, // In kg, scaled by 100 (1.5kg -> 150)
+    timestamp: Int,
 }
 
 // Contract datum for our validator
-type Datum {
-  admin: ByteArray,
-  farmers: List(ByteArray),
-  tree_records: List(TreePlantingRecord),
-  carbon_data: List(CarbonData),
-  token_mints: Dict.Dict<ByteArray, Int>,
+pub type Datum {
+    admin: ByteArray,
+    farmers: List<ByteArray>,
+    tree_records: List<TreePlantingRecord>,
+    carbon_data: List<CarbonData>,
+    token_mints: List<(ByteArray, Int)>,
 }
 
 // Redeemer actions for our validator
-type Redeemer {
-  RegisterFarmer { farmer_id: ByteArray }
-  PlantTrees { record: TreePlantingRecord }
-  UpdateCarbonData { data: CarbonData }
-  MintTokens { farmer_id: ByteArray, amount: Int }
+pub type Redeemer {
+    RegisterFarmer(ByteArray)
+    PlantTrees(TreePlantingRecord)
+    UpdateCarbonData(CarbonData)
+    MintTokens(ByteArray, Int)
+    SpendTokens(ByteArray, Int, ByteArray)
 }
 
-// Validator function
-validator {
-  fn vardano_protocol(datum: Datum, redeemer: Redeemer, ctx: ScriptContext) -> Bool {
-    let transaction = ctx.transaction
-    let admin_pkh = datum.admin
+// Token policy for our carbon credit tokens
+const token_policy_id = #"f4c9f9c4252d86702c2f4c2e49e6648c7cffe3c8f2b6b7d779788f50"
 
-    when redeemer is {
-      // Register a new farmer
-      RegisterFarmer { farmer_id } -> {
-        // Check if caller is admin
-        must_be_signed_by(transaction, admin_pkh) && 
-        // Check if farmer isn't already registered
-        !list.has(datum.farmers, farmer_id)
-      }
-      
-      // Record new tree planting
-      PlantTrees { record } -> {
-        // Verify the farmer is registered
-        list.has(datum.farmers, record.farmer_id) &&
-        // Verify the transaction is signed by the farmer
-        must_be_signed_by(transaction, record.farmer_id)
-      }
-      
-      // Update carbon data from off-chain sources
-      UpdateCarbonData { data } -> {
-        // Only admin can update carbon data
-        must_be_signed_by(transaction, admin_pkh) &&
-        // Check if the farmer exists
-        list.has(datum.farmers, data.farmer_id)
-      }
-      
-      // Mint carbon tokens based on carbon absorption
-      MintTokens { farmer_id, amount } -> {
-        // Only admin can trigger minting
-        must_be_signed_by(transaction, admin_pkh) &&
-        // Check if farmer exists
-        list.has(datum.farmers, farmer_id) &&
-        // Validate the amount based on carbon data
-        validate_token_amount(datum.carbon_data, farmer_id, amount)
-      }
+// Token name
+const token_name = "COTREE"
+
+// Main validator function
+validator vardano_protocol {
+    spend(datum: Option<Datum>, redeemer: Redeemer, _own_ref: OutputReference, ctx: Transaction) -> Bool {
+        when datum is {
+            Some(d) -> {
+                let transaction = ctx
+                let admin_pkh = d.admin
+
+                when redeemer is {
+                    RegisterFarmer(farmer_id) -> 
+                        must_be_signed_by(transaction, admin_pkh) && 
+                        !list.has(d.farmers, farmer_id)
+                    
+                    PlantTrees(record) -> 
+                        list.has(d.farmers, record.farmer_id) &&
+                        must_be_signed_by(transaction, record.farmer_id)
+                    
+                    UpdateCarbonData(data) -> 
+                        must_be_signed_by(transaction, admin_pkh) &&
+                        list.has(d.farmers, data.farmer_id)
+                    
+                    MintTokens(farmer_id, amount) -> 
+                        must_be_signed_by(transaction, admin_pkh) &&
+                        list.has(d.farmers, farmer_id) &&
+                        validate_token_amount(d.carbon_data, farmer_id, amount) &&
+                        validate_mint_operation(transaction, farmer_id, amount)
+                    
+                    SpendTokens(farmer_id, amount, receiver) -> 
+                        must_be_signed_by(transaction, farmer_id) &&
+                        validate_spend_operation(transaction, farmer_id, amount, receiver)
+                }
+            }
+
+            None -> False  // No datum provided, reject transaction
+        }
     }
-  }
 }
+
 
 // Helper functions
 
-// Check if a transaction is signed by the given public key hash
 fn must_be_signed_by(transaction: Transaction, pkh: ByteArray) -> Bool {
-  list.has(transaction.extra_signatories, pkh)
+    list.has(transaction.extra_signatories, pkh)
 }
 
-// Validate token amount based on carbon data
 fn validate_token_amount(carbon_data: List<CarbonData>, farmer_id: ByteArray, amount: Int) -> Bool {
-  // Find all carbon data for this farmer
-  let farmer_data = list.filter(carbon_data, fn(data) { data.farmer_id == farmer_id })
-  
-  // Calculate total CO2 absorbed from all data points
-  let total_co2 = list.foldr(
-    farmer_data,
-    0,
-    fn(data, acc) { acc + data.co2_absorbed }
-  )
-  
-  // Token minting formula: 1 token per kg of CO2 (with scaling factor)
-  // CO2 is stored with 100x scaling, so we divide by 100
-  let max_tokens = total_co2 / 100
-  
-  // Amount should be less than or equal to calculated max
-  amount <= max_tokens
+    let farmer_data = list.filter(carbon_data, fn(data: CarbonData) { data.farmer_id == farmer_id })
+
+    let total_co2 = list.foldl(farmer_data, 0, fn(data: CarbonData, acc: Int) { acc + data.co2_absorbed })
+
+
+    let max_tokens = total_co2 / 100
+    amount <= max_tokens
+}
+
+fn validate_mint_operation(tx: Transaction, farmer_id: ByteArray, amount: Int) -> Bool {
+    let expected_mint = from_asset(token_policy_id, token_name, amount)
+    let actual_mint = tx.mint
+    quantity_of(actual_mint, token_policy_id, token_name) == quantity_of(expected_mint, token_policy_id, token_name)
+ &&
+    verify_tokens_to_farmer(tx, farmer_id, amount)
+}
+
+fn verify_tokens_to_farmer(tx: Transaction, farmer_id: ByteArray, amount: Int) -> Bool {
+    let outputs = tx.outputs
+    let farmer_outputs = list.filter(outputs, fn(output) {
+        when output.address.payment_credential is {
+            VerificationKey(vk) -> vk == farmer_id
+            _ -> False
+        }
+    })
+    list.any(farmer_outputs, fn(output) {
+        let token_amount = quantity_of(output.value, token_policy_id, token_name)
+        token_amount >= amount
+    })
+}
+fn validate_spend_operation(tx: Transaction, farmer_id: ByteArray, amount: Int, receiver: ByteArray) -> Bool {
+    let farmer_inputs = list.filter(tx.inputs, fn(input) {
+        when input.output.address.payment_credential is {
+            VerificationKey(vk) -> vk == farmer_id
+            _ -> False
+        }
+    })
+
+   let total_input_tokens = list.foldl(farmer_inputs, 0, fn(input: Input, acc: Int) {
+    acc + quantity_of(input.output.value, token_policy_id, token_name)
+})
+
+    let receiver_outputs = list.filter(tx.outputs, fn(output) {
+        when output.address.payment_credential is {
+            VerificationKey(vk) -> vk == receiver
+            _ -> False
+        }
+    })
+
+    let total_receiver_tokens = list.foldl(receiver_outputs, 0, fn(output: Output, acc: Int) {
+    acc + quantity_of(output.value, token_policy_id, token_name)
+})
+
+
+    total_input_tokens >= amount && total_receiver_tokens >= amount
 }

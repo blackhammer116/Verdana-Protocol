@@ -299,7 +299,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-16 bg-primary text-white rounded-3xl mb-16">
+      <section className="py-16 bg-primary text-white rounded-3xl mb-16 max-w-7xl flex flex-col items-center mx-auto">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">
             Ready to Make a Difference?

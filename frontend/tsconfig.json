@@ -18,6 +18,13 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/MapComponentImpl.jsx", "src/components/MapComponent.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components/MapComponentImpl.jsx",
+    "src/components/MapComponent.jsx",
+    "src/lib/common.mjs"
+, "src/lib/lock.mjs", "src/lib/generate-credentials.mjs"  ],
   "exclude": ["node_modules"]
 }
