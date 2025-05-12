@@ -1,5 +1,9 @@
-from crewai import Agent, Crew, Process, Task
+import os
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
+
+from dotenv import load_dotenv
+load_dotenv()
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -14,6 +18,16 @@ class VardanaProtocalAi():
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
+    def __init__(self):
+        # Initialize Groq LLM
+        self.llm = LLM(
+            model="groq/llama-3.1-8b-instant",
+            api_key=os.getenv("GROQ_API_KEY"),
+            base_url="https://api.groq.com/openai/v1",
+            temperature=0.7,
+            verbose=True
+        )
+
 
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
@@ -21,14 +35,19 @@ class VardanaProtocalAi():
     def researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['researcher'],
-            verbose=True
+            verbose=True,
+            llm=self.llm,
+            allow_delegation=False
         )
 
     @agent
     def reporting_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['reporting_analyst'],
-            verbose=True
+            verbose=True,
+            llm=self.llm,
+            allow_delegation=False
+            
         )
 
     # To learn more about structured task outputs,

@@ -31,7 +31,6 @@ pub type CarbonData {
 
 // Contract datum for our validator
 pub type Datum {
-    admin: ByteArray,
     farmers: List<ByteArray>,
     tree_records: List<TreePlantingRecord>,
     carbon_data: List<CarbonData>,
@@ -59,11 +58,9 @@ validator vardano_protocol {
         when datum is {
             Some(d) -> {
                 let transaction = ctx
-                let admin_pkh = d.admin
 
                 when redeemer is {
                     RegisterFarmer(farmer_id) -> 
-                        must_be_signed_by(transaction, admin_pkh) && 
                         !list.has(d.farmers, farmer_id)
                     
                     PlantTrees(record) -> 
@@ -71,11 +68,11 @@ validator vardano_protocol {
                         must_be_signed_by(transaction, record.farmer_id)
                     
                     UpdateCarbonData(data) -> 
-                        must_be_signed_by(transaction, admin_pkh) &&
+                        
                         list.has(d.farmers, data.farmer_id)
                     
                     MintTokens(farmer_id, amount) -> 
-                        must_be_signed_by(transaction, admin_pkh) &&
+                        
                         list.has(d.farmers, farmer_id) &&
                         validate_token_amount(d.carbon_data, farmer_id, amount) &&
                         validate_mint_operation(transaction, farmer_id, amount)

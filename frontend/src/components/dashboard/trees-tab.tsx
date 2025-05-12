@@ -6,13 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Trees as Tree, MapPin, Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { getFarmerTrees, plantTree } from "@/lib/mock-data";
 import { Tree as TreeType } from "@/lib/types";
 import { useWallet } from "@meshsdk/react";
-import { plantTree as plantTreeOnChain } from "@/lib/blockchain";
+import {
+  plantTrees as plantTreeOnChain,
+} from "@/lib/blockchain";
 import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,9 +55,7 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
   const { wallet } = useWallet();
   const { toast } = useToast();
 
-  useEffect(() => {
-    setTrees(getFarmerTrees(farmerId));
-  }, [farmerId]);
+
 
   const handlePlantTree = async () => {
     if (!newTree.latitude || !newTree.longitude) {
@@ -71,7 +83,8 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
 
       toast({
         title: "Transaction submitted",
-        description: "Your tree planting transaction has been submitted to the blockchain...",
+        description:
+          "Your tree planting transaction has been submitted to the blockchain...",
       });
 
       // After blockchain confirmation, update UI
@@ -90,7 +103,10 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
 
       toast({
         title: "Tree planted successfully!",
-        description: `Transaction confirmed. Hash: ${txHash.slice(0, 8)}...`,
+        description:
+          typeof txHash === "string"
+            ? `Transaction confirmed: ${(txHash as string).substring(0, 8)}...`
+            : "Tree added to local database",
       });
     } catch (error) {
       console.error("Error planting tree:", error);
@@ -103,12 +119,17 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
   };
 
   const growthStageLabel = (stage: number) => {
-    switch(stage) {
-      case 0: return "Seedling";
-      case 1: return "Young";
-      case 2: return "Growing";
-      case 3: return "Mature";
-      default: return "Unknown";
+    switch (stage) {
+      case 0:
+        return "Seedling";
+      case 1:
+        return "Young";
+      case 2:
+        return "Growing";
+      case 3:
+        return "Mature";
+      default:
+        return "Unknown";
     }
   };
 
@@ -130,9 +151,11 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="treeType">Tree Type</Label>
-                <Select 
+                <Select
                   defaultValue={newTree.treeType}
-                  onValueChange={(value) => setNewTree({...newTree, treeType: value})}
+                  onValueChange={(value) =>
+                    setNewTree({ ...newTree, treeType: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select tree type" />
@@ -148,24 +171,34 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="latitude">Latitude</Label>
-                <Input 
-                  id="latitude" 
-                  type="number" 
+                <Input
+                  id="latitude"
+                  type="number"
                   step="0.0001"
-                  placeholder="e.g. 8.9806" 
+                  placeholder="e.g. 8.9806"
                   value={newTree.latitude || ""}
-                  onChange={(e) => setNewTree({...newTree, latitude: parseFloat(e.target.value)})}
+                  onChange={(e) =>
+                    setNewTree({
+                      ...newTree,
+                      latitude: parseFloat(e.target.value),
+                    })
+                  }
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="longitude">Longitude</Label>
-                <Input 
-                  id="longitude" 
-                  type="number" 
+                <Input
+                  id="longitude"
+                  type="number"
                   step="0.0001"
-                  placeholder="e.g. 38.7578" 
+                  placeholder="e.g. 38.7578"
                   value={newTree.longitude || ""}
-                  onChange={(e) => setNewTree({...newTree, longitude: parseFloat(e.target.value)})}
+                  onChange={(e) =>
+                    setNewTree({
+                      ...newTree,
+                      longitude: parseFloat(e.target.value),
+                    })
+                  }
                 />
               </div>
               <Button className="w-full" onClick={handlePlantTree}>
@@ -188,7 +221,10 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
       <h3 className="text-xl font-semibold mt-8 mb-4">Tree Inventory</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {trees.map((tree) => (
-          <Card key={tree.id} className={`tree-growth-stage-${tree.growthStage + 1}`}>
+          <Card
+            key={tree.id}
+            className={`tree-growth-stage-${tree.growthStage + 1}`}
+          >
             <CardHeader className="pb-2">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg">{tree.treeType}</CardTitle>
@@ -220,7 +256,8 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
                 <span className="text-muted-foreground">Location:</span>
                 <span className="flex items-center gap-1">
                   <MapPin className="h-3 w-3" />
-                  {tree.location.latitude.toFixed(4)}, {tree.location.longitude.toFixed(4)}
+                  {tree.location.latitude.toFixed(4)},{" "}
+                  {tree.location.longitude.toFixed(4)}
                 </span>
               </div>
             </CardContent>

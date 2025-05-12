@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAddress } from "@meshsdk/react";
+import { useAddress, useWallet } from "@meshsdk/react";
+import { registerFarmer } from "@/lib/blockchain";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,17 +23,19 @@ import { mockFarmers } from "@/lib/mock-data";
 export default function Register() {
   const router = useRouter();
   const address = useAddress();
+  const { wallet } = useWallet();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     latitude: "",
     longitude: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!address) {
+    if (!address || !wallet) {
       toast({
         title: "No wallet connected",
         description: "Please connect your Cardano wallet first.",
@@ -50,39 +53,49 @@ export default function Register() {
       return;
     }
 
-    // Simulate registration on blockchain
-    toast({
-      title: "Registration in progress",
-      description: "Your information is being recorded on the blockchain...",
-    });
+    setLoading(true);
 
-    // After a short delay, simulate success and redirect
-    setTimeout(() => {
+    try {
+      // Register farmer on blockchain
+      const success = await registerFarmer(wallet);
+
+      if (success) {
+        // Store farmer data in local storage
+        const newFarmer = {
+          id: Date.now().toString(), // Use timestamp as temporary ID
+          name: formData.name,
+          walletAddress: address,
+          location: {
+            latitude: parseFloat(formData.latitude),
+            longitude: parseFloat(formData.longitude),
+          },
+          registeredAt: new Date(),
+        };
+
+        localStorage.setItem("registeredFarmer", JSON.stringify(newFarmer));
+
+        toast({
+          title: "Registration successful!",
+          description:
+            "Your farmer profile has been created on the blockchain.",
+        });
+
+        // Redirect to dashboard
+        router.push("/dashboard");
+      } else {
+        throw new Error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
       toast({
-        title: "Registration successful!",
-        description: "Your farmer profile has been created.",
+        title: "Registration failed",
+        description:
+          "There was an error registering your farmer profile. Please try again.",
+        variant: "destructive",
       });
-
-      // Add farmer to mock data
-      const newFarmer = {
-        id: (mockFarmers.length + 1).toString(),
-        name: formData.name,
-        walletAddress: address,
-        location: {
-          latitude: parseFloat(formData.latitude),
-          longitude: parseFloat(formData.longitude),
-        },
-        registeredAt: new Date(),
-      };
-
-      mockFarmers.push(newFarmer);
-
-      // Set the registered farmer in local storage
-      localStorage.setItem("registeredFarmer", JSON.stringify(newFarmer));
-
-      // Redirect to dashboard
-      router.push("/dashboard");
-    }, 2000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -191,16 +204,25 @@ export default function Register() {
                       Enter the GPS coordinates of your land.
                     </p>
                   </div>
+                  <CardFooter>
+                    <Button
+                      className="w-full"
+                      onClick={handleSubmit}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <span className="mr-2">Registering...</span>
+                          <span className="animate-spin">⚪</span>
+                        </>
+                      ) : (
+                        "Register as Farmer"
+                      )}
+                    </Button>
+                  </CardFooter>
                 </form>
               )}
             </CardContent>
-            <CardFooter>
-              {address && (
-                <Button className="w-full" onClick={handleSubmit}>
-                  Register as Farmer
-                </Button>
-              )}
-            </CardFooter>
           </Card>
         </div>
       </div>

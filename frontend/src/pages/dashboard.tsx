@@ -17,33 +17,31 @@ export default function Dashboard() {
   const address = useAddress();
   const [activeFarmer, setActiveFarmer] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const storedFarmer = localStorage.getItem('registeredFarmer');
+
   useEffect(() => {
+    // Check if we're in the browser environment
+    if (typeof window !== "undefined") {
+      const storedFarmer = window.localStorage.getItem("registeredFarmer");
 
-    // if (!address) {
-    //   router.push('/');
-    //   return;
-    // }
-    console.log("Connected wallet address:", address);
+      if (storedFarmer) {
+        const farmer = JSON.parse(storedFarmer);
+        if (farmer.walletAddress === address) {
+          setActiveFarmer(farmer.id);
+          setLoading(false);
+          return;
+        }
+      }
 
-    if (storedFarmer) {
-      const farmer = JSON.parse(storedFarmer);
-      if (farmer.walletAddress === address) {
+      // Find the farmer based on the connected wallet use local storage
+      const farmer = storedFarmer ? JSON.parse(storedFarmer) : null;
+      if (farmer) {
         setActiveFarmer(farmer.id);
-        setLoading(false);
-        return;
+      } else {
+        // If no farmer found with this wallet, redirect to registration
+        router.push("/register");
       }
     }
-console.log("activeFarmer", activeFarmer);
-    // Find the farmer based on the connected wallet use local storage
-    const farmer = storedFarmer ? JSON.parse(storedFarmer) : null;
-    if (farmer) {
-      setActiveFarmer(farmer.id);
-    } else {
-      // If no farmer found with this wallet, redirect to registration
-      router.push('/register');
-    }
-    
+
     setLoading(false);
   }, [address, router]);
 
@@ -62,7 +60,7 @@ console.log("activeFarmer", activeFarmer);
   return (
     <div className="flex min-h-screen flex-col">
       <DashboardNav />
-      
+
       <div className="flex-1 container py-8">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid grid-cols-4 mb-8">
@@ -71,19 +69,19 @@ console.log("activeFarmer", activeFarmer);
             <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
             <TabsTrigger value="wallet">Wallet</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="overview">
             <OverviewTab farmerId={activeFarmer} />
           </TabsContent>
-          
+
           <TabsContent value="trees">
             <TreesTab farmerId={activeFarmer} />
           </TabsContent>
-          
+
           <TabsContent value="marketplace">
             <MarketplaceTab farmerId={activeFarmer} />
           </TabsContent>
-          
+
           <TabsContent value="wallet">
             <WalletTab farmerId={activeFarmer} />
           </TabsContent>
