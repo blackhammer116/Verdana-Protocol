@@ -14,7 +14,7 @@ import {
   PubKeyHash,
   Integer,
   UTxO,
-  Bytes,
+  // Bytes removed here
 } from "@meshsdk/core";
 import { applyParamsToScript } from "@meshsdk/core-csl";
 import { Data } from "@meshsdk/core-csl";
@@ -56,18 +56,18 @@ const tokenName = "COTREE";
 
 // Define data types that match the Aiken contract
 export type TreePlantingRecord = ConStr0<
-  [Bytes, ConStr0<[Integer, Integer]>, Bytes, Integer, Integer]
+  [string, ConStr0<[Integer, Integer]>, string, Integer, Integer]
 >;
 
-export type CarbonData = ConStr0<[Bytes, Integer, Integer, Integer]>;
+export type CarbonData = ConStr0<[string, Integer, Integer, Integer]>;
 
 export type VardanoDatum = ConStr0<
   [
-    Bytes,
+    string,
     PubKeyHash[],
     TreePlantingRecord[],
     CarbonData[],
-    ConStr0<[Bytes, Integer]>[]
+    ConStr0<[string, Integer]>[]
   ]
 >;
 
@@ -750,3 +750,4 @@ export async function getCOTREEBalance(wallet: IWallet): Promise<number> {
 }
 
 // Add this after your nodeProvider initialization
+
