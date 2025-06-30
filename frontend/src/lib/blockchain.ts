@@ -17,7 +17,6 @@ import {
   // Bytes removed here
 } from "@meshsdk/core";
 import { applyParamsToScript } from "@meshsdk/core-csl";
-import { Data } from "@meshsdk/core-csl";
 
 // Import contract blueprint from your Aiken workspace
 import contractBlueprint from "../../../smart-contract/plutus.json";
