@@ -97,11 +97,12 @@ export async function registerFarmer(wallet: IWallet): Promise<boolean> {
     } else {
       // Initialize with empty state if no UTXO exists
       currentDatum = mConStr0([
-        [], // empty farmers list
-        [], // empty tree records
-        [], // empty carbon data
-        [], // empty token mints
-      ]);
+  new Uint8Array([]), // empty Bytes
+  [], // empty farmers list
+  [], // empty tree records
+  [], // empty carbon data
+  [], // empty token mints
+]);
     }
 
     // Create transaction
