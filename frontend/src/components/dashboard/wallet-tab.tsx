@@ -35,6 +35,7 @@ interface WalletTabProps {
 export default function WalletTab({ farmerId }: WalletTabProps) {
   const address = useAddress();
   const { connected, wallet } = useWallet();
+  const [walletName, setWalletName] = useState<string>("");
   const [farmer, setFarmer] = useState(mockFarmers.find(f => f.id === farmerId));
   const [copySuccess, setCopySuccess] = useState(false);
   const [tokens, setTokens] = useState(getFarmerCarbonTokens(farmerId));
@@ -49,6 +50,12 @@ export default function WalletTab({ farmerId }: WalletTabProps) {
       setFarmer(mockFarmers.find(f => f.id === farmerId));
     }
   }, [farmerId]);
+
+  useEffect(() => {
+    if (connected && wallet && typeof wallet === "object" && "name" in wallet) {
+      setWalletName(wallet.name as string);
+    }
+  }, [connected, wallet]);
 
   const handleCopyAddress = () => {
     if (address) {
@@ -87,13 +94,11 @@ export default function WalletTab({ farmerId }: WalletTabProps) {
       return;
     }
 
-    // Simulate blockchain transaction
     toast({
       title: "Transaction initiated",
       description: "Sending transaction to the blockchain...",
     });
 
-    // Simulate transaction confirmation after delay
     setTimeout(() => {
       toast({
         title: "Transaction successful",
@@ -139,7 +144,7 @@ export default function WalletTab({ farmerId }: WalletTabProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-sm font-medium mb-1">Wallet Provider</h3>
-                <p className="text-sm">{connected ? wallet : "Not connected"}</p>
+                <p className="text-sm">{connected ? walletName : "Not connected"}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium mb-1">Farmer ID</h3>
