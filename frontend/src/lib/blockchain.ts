@@ -70,7 +70,7 @@ export type VardanoDatum = ConStr0<
   ]
 >;
 
-async function getWalletInfo(wallet: BrowserWallet) {
+async function getWalletInfo(wallet: IWallet) {
   const walletAddress = await wallet.getChangeAddress();
   const utxos = await wallet.getUtxos();
   const collateral = (await wallet.getCollateral())[0];
