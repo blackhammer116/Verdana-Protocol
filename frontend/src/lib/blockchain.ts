@@ -81,7 +81,7 @@ async function getWalletInfo(wallet: BrowserWallet) {
 /**
  * Register a new farmer to the protocol
  */
-export async function registerFarmer(wallet: BrowserWallet): Promise<boolean> {
+export async function registerFarmer(wallet: IWallet): Promise<boolean> {
   try {
     // Get wallet information
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
@@ -240,8 +240,10 @@ function serializeBigInt(value: any): any {
 /**
  * Plant trees and record on the blockchain
  */
+
+import type { IWallet } from "@meshsdk/core";
 export async function plantTrees(
-  wallet: BrowserWallet,
+  wallet: IWallet,
   treeData: {
     treeType: string;
     latitude: number;
@@ -359,7 +361,7 @@ export async function plantTrees(
  * Update carbon data for a farmer (admin only)
  */
 export async function updateCarbonData(
-  wallet: BrowserWallet,
+  wallet: IWallet,
   carbonData: {
     farmerId: string;
     ndvi: number;
@@ -458,7 +460,7 @@ export async function updateCarbonData(
  * Mint COTREE tokens as reward for carbon capture (admin only)
  */
 export async function mintTokens(
-  wallet: BrowserWallet,
+  wallet: IWallet,
   mintData: {
     farmerId: string;
     amount: number;
@@ -571,7 +573,7 @@ export async function mintTokens(
  * Spend COTREE tokens (transfer to another address)
  */
 export async function spendTokens(
-  wallet: BrowserWallet,
+  wallet: IWallet,
   spendData: {
     amount: number;
     receiverAddress: string;
@@ -674,7 +676,7 @@ export async function spendTokens(
  * Get all contract UTXOs for a specific farmer
  */
 export async function getFarmerCarbonData(
-  wallet: BrowserWallet
+  wallet: IWallet,
 ): Promise<CarbonData[]> {
   try {
     const { walletAddress } = await getWalletInfo(wallet);
@@ -703,7 +705,7 @@ export async function getFarmerCarbonData(
  * Get total carbon captured by a farmer
  */
 export async function getTotalCarbonCaptured(
-  wallet: BrowserWallet
+  wallet: IWallet,
 ): Promise<number> {
   try {
     const carbonData = await getFarmerCarbonData(wallet);
@@ -724,7 +726,7 @@ export async function getTotalCarbonCaptured(
 /**
  * Get COTREE token balance for a wallet
  */
-export async function getCOTREEBalance(wallet: BrowserWallet): Promise<number> {
+export async function getCOTREEBalance(wallet: IWallet): Promise<number> {
   try {
     const utxos = await wallet.getUtxos();
 
