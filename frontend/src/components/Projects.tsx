@@ -142,10 +142,7 @@ const ProjectsPage = () => {
       (project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.location.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
-  const handleOpenProject = (project) => {
-    setSelectedProject(project);
-  };
+  
 
   const handleCloseProject = () => {
     setSelectedProject(null);
