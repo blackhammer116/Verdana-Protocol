@@ -123,9 +123,13 @@ const ProjectsPage = () => {
   const { connected } = useWallet();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
   const [viewMode, setViewMode] = useState("list");
   const [isMounted, setIsMounted] = useState(false);
+
+  const handleOpenProject = (project: any) => {
+    setSelectedProject(project);
+  };
 
   useEffect(() => {
     setIsMounted(true);
