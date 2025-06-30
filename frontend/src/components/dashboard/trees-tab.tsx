@@ -79,7 +79,12 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
       };
 
       // Submit transaction to blockchain
-      const txHash = await plantTreeOnChain(wallet, datum);
+      const txHash = await plantTreeOnChain(wallet, {
+  treeType: newTree.treeType,
+  latitude: newTree.latitude,
+  longitude: newTree.longitude,
+  treeCount: 1,
+});
 
       toast({
         title: "Transaction submitted",
