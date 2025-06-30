@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,28 +21,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getFarmerTrees, plantTree } from "@/lib/mock-data";
+import { plantTree } from "@/lib/mock-data";
 import { Tree as TreeType } from "@/lib/types";
 import { useWallet } from "@meshsdk/react";
 import {
   plantTrees as plantTreeOnChain,
 } from "@/lib/blockchain";
-import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
+import type { BrowserWallet } from "@meshsdk/core";
 
 interface TreesTabProps {
   farmerId: string;
 }
-
-// // Import map component dynamically to avoid SSR issues with Leaflet
-// const TreeMap = dynamic(() => import("@/components/dashboard/tree-map"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="w-full h-[400px] bg-muted flex items-center justify-center">
-//       Loading map...
-//     </div>
-//   ),
-// });
 
 export default function TreesTab({ farmerId }: TreesTabProps) {
   const [trees, setTrees] = useState<TreeType[]>([]);
@@ -54,8 +44,6 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
   });
   const { wallet } = useWallet();
   const { toast } = useToast();
-
-
 
   const handlePlantTree = async () => {
     if (!newTree.latitude || !newTree.longitude) {
@@ -78,13 +66,13 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
         treeType: newTree.treeType,
       };
 
-      // Submit transaction to blockchain
-      const txHash = await plantTreeOnChain(wallet, {
-  treeType: newTree.treeType,
-  latitude: newTree.latitude,
-  longitude: newTree.longitude,
-  treeCount: 1,
-});
+      // Submit transaction to blockchain — cast wallet to BrowserWallet here
+      const txHash = await plantTreeOnChain(wallet as BrowserWallet, {
+        treeType: newTree.treeType,
+        latitude: newTree.latitude,
+        longitude: newTree.longitude,
+        treeCount: 1,
+      });
 
       toast({
         title: "Transaction submitted",
@@ -110,7 +98,7 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
         title: "Tree planted successfully!",
         description:
           typeof txHash === "string"
-            ? `Transaction confirmed: ${(txHash as string).substring(0, 8)}...`
+            ? `Transaction confirmed: ${txHash.substring(0, 8)}...`
             : "Tree added to local database",
       });
     } catch (error) {
@@ -272,3 +260,4 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
     </div>
   );
 }
+
