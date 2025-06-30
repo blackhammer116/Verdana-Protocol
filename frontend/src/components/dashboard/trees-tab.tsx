@@ -77,7 +77,9 @@ export default function TreesTab({ farmerId }: TreesTabProps) {
       toast({
         title: "Transaction submitted",
         description:
-          "Your tree planting transaction has been submitted to the blockchain...",
+  txHash && typeof txHash === "string"
+    ? `Transaction confirmed: ${txHash.substring(0, 8)}...`
+    : "Tree added to local database",
       });
 
       // After blockchain confirmation, update UI
