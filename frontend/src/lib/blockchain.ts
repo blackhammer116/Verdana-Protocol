@@ -238,7 +238,7 @@ export async function plantTrees(
     longitude: number;
     treeCount: number;
   }
-): Promise<boolean> {
+): Promise<string | false> {  // Return txHash or false on failure
   try {
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
     const farmerHash = deserializeAddress(walletAddress).pubKeyHash;
@@ -253,20 +253,18 @@ export async function plantTrees(
       contractUtxos[0].output.plutusData
     );
 
-    // Tree planting record
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const treeRecord = mConStr0([
       farmerHash,
       mConStr0([
-        plutusInt(Number(treeData.latitude * 1_000_000)),
-        plutusInt(Number(treeData.longitude * 1_000_000)),
+        plutusInt(Math.floor(treeData.latitude * 1_000_000)),
+        plutusInt(Math.floor(treeData.longitude * 1_000_000)),
       ]),
       stringToHex(treeData.treeType || ""),
       plutusInt(currentTimestamp),
       plutusInt(Math.max(1, treeData.treeCount)),
     ]);
 
-    // Append new tree record
     const treeRecords = [...currentDatum.fields[2], treeRecord];
 
     const updatedDatum = mConStr0([
@@ -276,8 +274,6 @@ export async function plantTrees(
       currentDatum.fields[3],
       currentDatum.fields[4],
     ]);
-
-    const serializedDatum = serializeBigInt(updatedDatum);
 
     const utxo = contractUtxos[0];
     const txBuild = new MeshTxBuilder({
@@ -297,9 +293,9 @@ export async function plantTrees(
       )
       .txInScript(scriptCbor)
       .spendingReferenceTxInInlineDatumPresent()
-      .spendingReferenceTxInRedeemerValue(mConStr1([serializeBigInt(treeRecord)]))
+      .spendingReferenceTxInRedeemerValue(mConStr1([treeRecord]))
       .txOut(contractAddress, utxo.output.amount)
-      .txOutInlineDatumValue(serializedDatum)
+      .txOutInlineDatumValue(updatedDatum)
       .requiredSignerHash(farmerHash)
       .changeAddress(walletAddress)
       .txInCollateral(
@@ -315,16 +311,13 @@ export async function plantTrees(
     const txHash = await wallet.submitTx(signedTx);
     console.log("Transaction submitted:", txHash);
 
-    return true;
+    return txHash;
   } catch (error) {
     console.error("Error planting trees:", error);
     return false;
   }
 }
 
-/**
- * Update carbon data for a farmer (admin only)
- */
 export async function updateCarbonData(
   wallet: BrowserWallet,
   carbonData: {
@@ -332,7 +325,7 @@ export async function updateCarbonData(
     ndvi: number;
     co2Absorbed: number;
   }
-): Promise<boolean> {
+): Promise<string | false> {
   try {
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
     const signerHash = deserializeAddress(walletAddress).pubKeyHash;
@@ -400,26 +393,22 @@ export async function updateCarbonData(
     const txHash = await wallet.submitTx(signedTx);
     console.log("Transaction submitted:", txHash);
 
-    return true;
+    return txHash;
   } catch (error) {
     console.error("Error updating carbon data:", error);
     return false;
   }
 }
 
-/**
- * Mint COTREE tokens as reward for carbon capture (admin only)
- */
 export async function mintTokens(
   wallet: BrowserWallet,
   mintData: {
     farmerId: string;
     amount: number;
   }
-): Promise<boolean> {
+): Promise<string | false> {
   try {
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
-    const signerHash = deserializeAddress(walletAddress).pubKeyHash;
 
     const contractUtxos = await nodeProvider.fetchAddressUTxOs(contractAddress);
     if (contractUtxos.length === 0 || !contractUtxos[0].output.plutusData) {
@@ -491,26 +480,22 @@ export async function mintTokens(
     const txHash = await wallet.submitTx(signedTx);
     console.log("Transaction submitted:", txHash);
 
-    return true;
+    return txHash;
   } catch (error) {
     console.error("Error minting tokens:", error);
     return false;
   }
 }
 
-/**
- * Spend COTREE tokens (transfer to another address)
- */
 export async function spendTokens(
   wallet: BrowserWallet,
   spendData: {
     amount: number;
     receiverAddress: string;
   }
-): Promise<boolean> {
+): Promise<string | false> {
   try {
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
-    const farmerHash = deserializeAddress(walletAddress).pubKeyHash;
 
     // Find token UTXOs in wallet
     const tokenUtxos = utxos.filter((utxo) => {
@@ -565,7 +550,6 @@ export async function spendTokens(
         collateral.output.address
       );
 
-    // Add token UTXOs as inputs
     for (const utxo of tokenUtxos) {
       txBuilder = txBuilder.txIn(
         utxo.input.txHash,
@@ -581,11 +565,9 @@ export async function spendTokens(
     const txHash = await wallet.submitTx(signedTx);
     console.log("Transaction submitted:", txHash);
 
-    return true;
+    return txHash;
   } catch (error) {
     console.error("Error spending tokens:", error);
     return false;
   }
 }
-
-
