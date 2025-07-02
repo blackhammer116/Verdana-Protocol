@@ -2,7 +2,7 @@ import {
   BlockfrostProvider,
   deserializeAddress,
   serializePlutusScript,
-  mConStr0,Add commentMore actions
+  mConStr0,
   mConStr1,
   MeshTxBuilder,
   Asset,
@@ -36,7 +36,7 @@ const contractAddress = serializePlutusScript(
 const blockfrostApiKey = process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY || "";
 const nodeProvider = new BlockfrostProvider(blockfrostApiKey);
 
-export const mInt = (amount: string | number | undefined | null): bigint => {Add commentMore actions
+export const mInt = (amount: string | number | undefined | null): bigint => {
   if (amount === undefined || amount === null) {
     throw new Error(`Cannot convert ${amount} to BigInt`);
   }
@@ -173,7 +173,7 @@ export async function registerFarmer(wallet: BrowserWallet): Promise<boolean> {
     }
 
     // Sign transaction
-    let signedTx;Add commentMore actions
+    let signedTx;
     try {
       signedTx = await wallet.signTx(txDraft);
     } catch (error) {
@@ -207,7 +207,7 @@ function plutusInt(value: number | string | undefined | null): string {
   if (typeof num !== "number" || isNaN(num)) {
     throw new Error(`Invalid number value: ${value}`);
   }
-Add commentMore actions
+
   if (!isFinite(num)) {
     throw new Error(`Number is infinite: ${value}`);
   }
@@ -320,7 +320,7 @@ export async function plantTrees(
       )
       .txInScript(scriptCbor)
       .spendingReferenceTxInInlineDatumPresent()
-      .spendingReferenceTxInRedeemerValue(Add commentMore actions
+      .spendingReferenceTxInRedeemerValue(
         mConStr1([serializeBigInt(treeRecord)])
       )
       .txOut(contractAddress, utxo.output.amount)
@@ -387,7 +387,7 @@ export async function updateCarbonData(
     const currentTimestamp = Math.floor(Date.now() / 1000);
     const farmerPubKeyHash = carbonData.farmerId;
     const carbonRecord = mConStr0([
-      farmerPubKeyHash,Add commentMore actions
+      farmerPubKeyHash,
       mInt(Math.floor(carbonData.ndvi * 1000)), // Scale NDVI by 1000
       mInt(Math.floor(carbonData.co2Absorbed * 100)), // Scale CO2 by 100
       mInt(currentTimestamp),
