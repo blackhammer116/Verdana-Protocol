@@ -102,7 +102,7 @@ export default function SatelliteMap() {
     ctx.stroke()
   }
 
-  const drawMapScale = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+  const drawMapScale = (ctx: CanvasRenderingContext2D, height: number) => {
     const scaleX = 20
     const scaleY = height - 30
     const scaleWidth = 100
@@ -132,7 +132,7 @@ export default function SatelliteMap() {
     ctx.fillText("10 km", scaleX + scaleWidth - 10, scaleY + 20)
   }
 
-  const drawCompass = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+  const drawCompass = (ctx: CanvasRenderingContext2D, width: number) => {
     const compassX = width - 50
     const compassY = 50
     const radius = 20
@@ -170,7 +170,7 @@ export default function SatelliteMap() {
         <h3 className="text-sm font-medium">Niger, West Africa</h3>
         <p className="text-xs text-muted-foreground flex items-center">
           <MapPin className="h-3 w-3 mr-1" />
-          Farmer's Location
+          Farmer&apos;s Location
         </p>
       </div>
     </div>

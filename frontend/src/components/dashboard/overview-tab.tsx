@@ -1,24 +1,14 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, Scaling as Seedling, Map, ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Leaf, Scaling as Seedling,  ArrowUpRight } from "lucide-react";
+import {  useState } from "react";
 import {
-  mockFarmers,
   getFarmerTrees,
   getFarmerCarbonTokens,
-  getFarmerMonitoringData,
-  getFarmerTransactions,
+
 } from "@/lib/mock-data";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+
 import SatelliteMonitoring from "./satellite-monitoring";
 
 interface OverviewTabProps {
@@ -26,17 +16,10 @@ interface OverviewTabProps {
 }
 
 export default function OverviewTab({ farmerId }: OverviewTabProps) {
-  const [farmer, setFarmer] = useState(
-    mockFarmers.find((f) => f.id === farmerId)
-  );
-  const [trees, setTrees] = useState(getFarmerTrees(farmerId));
-  const [tokens, setTokens] = useState(getFarmerCarbonTokens(farmerId));
-  const [monitoringData, setMonitoringData] = useState(
-    getFarmerMonitoringData(farmerId)
-  );
-  const [transactions, setTransactions] = useState(
-    getFarmerTransactions(farmerId)
-  );
+
+  const [trees, ] = useState(getFarmerTrees(farmerId));
+  const [tokens, ] = useState(getFarmerCarbonTokens(farmerId));
+
 
   const totalCO2 = tokens.reduce((acc, token) => acc + token.co2Captured, 0);
   const totalTokens = tokens.reduce((acc, token) => acc + token.amount, 0);

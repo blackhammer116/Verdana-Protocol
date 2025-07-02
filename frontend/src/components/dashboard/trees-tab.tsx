@@ -21,13 +21,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { getFarmerTrees, plantTree } from "@/lib/mock-data";
+import {  plantTree } from "@/lib/mock-data";
 import { Tree as TreeType } from "@/lib/types";
 import { useWallet } from "@meshsdk/react";
 import {
   plantTrees as plantTreeOnChain,
 } from "@/lib/blockchain";
-import dynamic from "next/dynamic";
 import { useToast } from "@/hooks/use-toast";
 
 interface TreesTabProps {

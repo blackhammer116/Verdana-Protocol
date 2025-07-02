@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { mockCarbonTokens, getFarmerCarbonTokens } from "@/lib/mock-data";
-import { ArrowUpRight, ShieldCheck, Info } from "lucide-react";
+import {  ShieldCheck, Info } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -23,7 +22,7 @@ interface MarketplaceTabProps {
 
 export default function MarketplaceTab({ farmerId }: MarketplaceTabProps) {
   const [availableTokens, setAvailableTokens] = useState(0);
-  const [marketTokens, setMarketTokens] = useState(mockCarbonTokens.filter(t => t.farmerId !== farmerId));
+  const [marketTokens, ] = useState(mockCarbonTokens.filter(t => t.farmerId !== farmerId));
   const [myTokens, setMyTokens] = useState(getFarmerCarbonTokens(farmerId));
   const { toast } = useToast();
 
@@ -33,7 +32,7 @@ export default function MarketplaceTab({ farmerId }: MarketplaceTabProps) {
     setAvailableTokens(tokens.reduce((acc, token) => acc + token.amount, 0));
   }, [farmerId]);
 
-  const handleBuy = (tokenId: string) => {
+  const handleBuy = () => {
     toast({
       title: "Transaction initiated",
       description: "Sending transaction to the blockchain...",

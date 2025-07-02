@@ -1,8 +1,7 @@
 "use client";
 
-import { Trees as Tree, Leaf } from "lucide-react";
+import { Leaf } from "lucide-react";
 import Link from "next/link";
-import WalletConnect from "@/components/wallet-connect";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "../ui/button";
 

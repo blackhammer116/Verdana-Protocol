@@ -10,14 +10,11 @@ import {
   stringToHex,
   deserializeDatum,
   ConStr0,
-  ConStr1,
   PubKeyHash,
   Integer,
-  UTxO,
  Bytes,
 } from "@meshsdk/core";
 import { applyParamsToScript } from "@meshsdk/core-csl";
-import { Data } from "@meshsdk/core-csl";
 // Import contract blueprint from your Aiken workspace
 import contractBlueprint from "../../../smart-contract/plutus.json";
 
@@ -267,7 +264,7 @@ export async function plantTrees(
     );
 
     // Check if farmer is registeredAdd commentMore actions
-    const farmers = currentDatum.fields[0];
+
     // console.log("Farmers:", currentDatum);
     // if (!farmers.includes(farmerHash)) {
     //   console.error("Farmer not registered");
@@ -369,7 +366,7 @@ export async function updateCarbonData(
   try {
     // Get wallet information
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
-    const signerHash = deserializeAddress(walletAddress).pubKeyHash;
+ 
 
   // Verify signer is adminAdd commentMore actions
     // Get current contract state  
@@ -467,7 +464,6 @@ export async function mintTokens(
   try {
     // Get wallet information
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
- const signerHash = deserializeAddress(walletAddress).pubKeyHash;
     
    // Verify signer is adminAdd commentMore actions
 
@@ -580,7 +576,7 @@ export async function spendTokens(
   try {
      // Get wallet information
     const { walletAddress, utxos, collateral } = await getWalletInfo(wallet);
-    const farmerHash = deserializeAddress(walletAddress).pubKeyHash;
+
     
     // Find farmer's token UTXOs
     const tokenUtxos = utxos.filter((utxo) => {

@@ -8,7 +8,6 @@ interface CarbonMarketProps {
 
 export const CarbonMarket: React.FC<CarbonMarketProps> = ({ 
   tokenBalance, 
-  wallet,
   connected
 }) => {
   const [sellAmount, setSellAmount] = useState('');
@@ -43,7 +42,7 @@ export const CarbonMarket: React.FC<CarbonMarketProps> = ({
     setSellAmount(e.target.value);
   };
   
-  const handleSell = async (buyerId: number) => {
+  const handleSell = async () => {
     if (!connected) {
       alert('Please connect your wallet first');
       return;
