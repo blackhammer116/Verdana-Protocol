@@ -143,7 +143,7 @@ const ProjectsPage = () => {
     setSelectedProject(null);
   };
 
-  const handleOpenProject = (project) => {Add commentMore actions
+  const handleOpenProject = (project) => {
     setSelectedProject(project);
   };
   
