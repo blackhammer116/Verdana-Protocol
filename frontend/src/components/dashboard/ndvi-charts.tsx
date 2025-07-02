@@ -41,8 +41,8 @@ export default function NDVIChart({ currentNDVI, timeElapsed }: NDVIChartProps) 
     if (timeElapsed % 7 === 0 || timeElapsed === 0) {
       setChartData((prevData) => {
         // Create a copy of the previous data
-        const newLabels = [...(prevData.labels ?? [])];
-const newData = [...(prevData.datasets[0].data ?? [])];
+         const newLabels = [...prevData.labels]
+        const newData = [...prevData.datasets[0].data]
 
         // Add new data point
         const monthLabel = Math.floor(timeElapsed / 30)
