@@ -139,11 +139,14 @@ const ProjectsPage = () => {
         project.location.toLowerCase().includes(searchTerm.toLowerCase()))
   );
   
-
   const handleCloseProject = () => {
     setSelectedProject(null);
   };
 
+  const handleOpenProject = (project) => {Add commentMore actions
+    setSelectedProject(project);
+  };
+  
   const toggleViewMode = () => {
     setViewMode(viewMode === "list" ? "map" : "list");
   };
